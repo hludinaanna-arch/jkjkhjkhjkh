@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TrackMyUni - Главная</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* ДОБАВЛЕНО: Плавная прокрутка для всей страницы */
+        html { scroll-behavior: smooth; }
+
+        :root {
+            --primary-color: #5a5ce6; 
+            --primary-hover: #4a4cd6;
+            --text-dark: #111;
+            --text-gray: #6b7280;
+            --bg-light: #f9fafb;
+            --card-blue-light: #CCCCFF;
+            --card-blue-dark: #D3D3FF;
+            --card-purple-light: #BEB5EB;
+            --card-purple-dark: #A6A9D0;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Outfit', sans-serif; background-color: var(--bg-light); color: var(--text-dark); line-height: 1.6; }
+        a { text-decoration: none; color: inherit; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
+        
+        /* Header */
+        header { background-color: #fff; padding: 1.5rem 0; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .header-content { display: flex; justify-content: space-between; align-items: center; }
+        .logo { display: flex; align-items: center; gap: 0.8rem; font-size: 1.5rem; font-weight: 700; color: var(--text-dark); }
+        .logo svg { height: 40px; width: auto; }
+        .logo .highlight-my { color: #5A5CE6; }
+        
+        nav { display: flex; gap: 2rem; }
+        nav a { font-weight: 500; color: var(--text-dark); transition: color 0.3s ease; }
+        nav a:hover { color: var(--primary-color); }
+        
+        .auth-buttons { display: flex; gap: 1rem; align-items: center; }
+        .btn { padding: 0.6rem 1.5rem; border-radius: 50px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; border: 2px solid transparent; display: inline-block; }
+        .btn-login { background-color: transparent; border-color: var(--primary-color); color: var(--primary-color); }
+        .btn-login:hover { background-color: var(--primary-color); color: #fff; }
+        .btn-signup { background-color: var(--primary-color); color: #fff; border: none; }
+        .btn-signup:hover { background-color: var(--primary-hover); }
+
+        /* User Avatar Circle */
+        .user-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            color: #fff;
+            display: none; /* Hidden by default */
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: transform 0.2s;
+            border: 2px solid #fff;
+            box-shadow: 0 2px 8px rgba(90, 92, 230, 0.3);
+        }
+        .user-avatar:hover { transform: scale(1.05); }
+
+        /* Hero */
+        .hero { background: linear-gradient(135deg, #eef2ff 0%, #e0e7ff 100%); padding: 6rem 0; overflow: hidden; position: relative; }
+        .hero-content { display: flex; justify-content: space-between; align-items: center; position: relative; z-index: 2; }
+        .hero-text { max-width: 50%; }
+        .hero-text h1 { font-size: 3.5rem; font-weight: 800; line-height: 1.2; margin-bottom: 1.5rem; color: var(--text-dark); letter-spacing: -0.02em; }
+        .hero-text p { font-size: 1.25rem; color: var(--text-gray); margin-bottom: 2rem; }
+        .hero-graphic { width: 45%; display: flex; justify-content: center; align-items: center; }
+        .hero-graphic img { max-width: 120%; height: auto; mix-blend-mode: screen; opacity: 0.9; animation: float 6s ease-in-out infinite; filter: drop-shadow(0 0 15px rgba(90, 92, 230, 0.3)); }
+        @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-15px); } 100% { transform: translateY(0px); } }
+
+        /* Features Grid */
+        .features { padding: 5rem 0; }
+        .features-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+        .feature-card { display: flex; justify-content: space-between; align-items: center; padding: 2.5rem; border-radius: 1.5rem; text-decoration: none; color: var(--text-dark); transition: transform 0.3s ease, box-shadow 0.3s ease; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); overflow: hidden; }
+        .feature-card:hover { transform: translateY(-5px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); }
+        .feature-card .icon { font-size: 2.8rem; color: rgba(255, 255, 255, 0.9); filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1)); transition: transform 0.3s ease; }
+        .feature-card:hover .icon { transform: scale(1.1) rotate(5deg); }
+        .feature-card .text h3 { font-size: 1.5rem; font-weight: 700; margin-bottom: 0.25rem; }
+        .feature-card .text p { font-size: 1rem; opacity: 0.8; }
+
+        /* Карточки */
+        .card-universities { background-color: var(--card-blue-light); }
+        .card-universities .text { order: 1; } .card-universities .icon { order: 2; }
+        
+        .card-olympiads { background-color: var(--card-blue-dark); color: #fff; }
+        .card-olympiads .text { order: 2; text-align: right; } .card-olympiads .icon { order: 1; }
+        
+        .card-volunteering { background-color: var(--card-purple-light); }
+        .card-volunteering .icon { order: 1; } .card-volunteering .text { order: 2; text-align: right; }
+        
+        .card-recommendations { background-color: var(--card-purple-dark); color: #fff; }
+        .card-recommendations .text { order: 1; } .card-recommendations .icon { order: 2; }
+        
+        .card-calendar { background-color: var(--card-blue-light); }
+        .card-calendar .text { order: 1; } .card-calendar .icon { order: 2; }
+        
+        .card-reviews { background-color: var(--card-purple-light); }
+        .card-reviews .icon { order: 1; } .card-reviews .text { order: 2; text-align: right; }
+
+        /* CTA */
+        .cta { text-align: center; padding: 4rem 0 8rem; }
+        .cta h2 { font-size: 2.5rem; font-weight: 700; margin-bottom: 2rem; }
+        .btn-explore { background-color: var(--primary-color); color: #fff; padding: 1rem 3rem; font-size: 1.2rem; box-shadow: 0 10px 15px -3px rgba(90, 92, 230, 0.4); }
+        .btn-explore:hover { background-color: var(--primary-hover); transform: scale(1.05); }
+
+        /* --- MODAL STYLES --- */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(5px);
+            display: none; justify-content: center; align-items: center;
+            z-index: 1000; opacity: 0; transition: opacity 0.3s ease;
+        }
+        .modal-overlay.active { display: flex; opacity: 1; }
+        .modal-content {
+            background: #fff; padding: 2.5rem; border-radius: 1.5rem;
+            width: 90%; max-width: 450px; box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+            position: relative; transform: translateY(20px); transition: transform 0.3s ease;
+        }
+        .modal-overlay.active .modal-content { transform: translateY(0); }
+        .close-modal {
+            position: absolute; top: 1rem; right: 1.5rem;
+            font-size: 1.5rem; color: var(--text-gray); cursor: pointer; transition: color 0.3s;
+        }
+        .close-modal:hover { color: var(--text-dark); }
+        .modal-header { text-align: center; margin-bottom: 2rem; }
+        .modal-header h2 { font-size: 1.8rem; font-weight: 700; color: var(--text-dark); }
+        .modal-header p { color: var(--text-gray); font-size: 0.95rem; margin-top: 0.5rem; }
+        .form-group { margin-bottom: 1.2rem; }
+        .form-group label { display: block; font-size: 0.9rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--text-dark); }
+        .form-group input {
+            width: 100%; padding: 0.8rem 1rem; border: 2px solid #e5e7eb;
+            border-radius: 0.8rem; font-family: inherit; font-size: 1rem;
+            outline: none; transition: border-color 0.3s;
+        }
+        .form-group input:focus { border-color: var(--primary-color); }
+        .form-group .input-hint { font-size: 0.8rem; color: var(--text-gray); margin-top: 0.3rem; display: block; }
+        .submit-btn {
+            width: 100%; padding: 1rem; background: var(--primary-color); color: #fff;
+            border: none; border-radius: 0.8rem; font-size: 1.1rem; font-weight: 600;
+            cursor: pointer; transition: background 0.3s; margin-top: 1rem;
+        }
+        .submit-btn:hover { background: var(--primary-hover); }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .hero-content { flex-direction: column; text-align: center; }
+            .hero-text { max-width: 100%; margin-bottom: 3rem; }
+            .hero-graphic { width: 80%; margin-top: 2rem; }
+            .features-grid { grid-template-columns: 1fr; }
+            .feature-card .text, .feature-card .icon { order: unset !important; text-align: left !important; }
+            .feature-card { flex-direction: row; justify-content: flex-start; gap: 2rem; }
+        }
+        @media (max-width: 768px) {
+            .header-content { flex-direction: column; gap: 1.5rem; }
+            nav { flex-wrap: wrap; justify-content: center; }
+            .hero-text h1 { font-size: 2.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ШАПКА -->
+    <header>
+        <div class="container header-content">
+            <div class="logo">
+                <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M50 20L15 40L50 60L85 40L50 20Z" stroke="#1F2937" stroke-width="5" stroke-linejoin="round"/>
+                    <path d="M25 50V75C25 75 35 85 50 85C65 85 75 75 75 75V50" stroke="#1F2937" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="85" cy="65" r="8" fill="#5A5CE6"/>
+                    <path d="M75 55L85 65" stroke="#5A5CE6" stroke-width="3" stroke-linecap="round"/>
+                </svg>
+                <span>Track<span class="highlight-my">My</span>Uni</span>
+            </div>
+            
+            <!-- МЕНЮ С ПРЯМЫМИ ССЫЛКАМИ НА ФАЙЛЫ -->
+            <nav>
+                <a href="index.html">Home</a>
+                <a href="universities.html">Universities</a>
+                <a href="olympiads.html">Olympiads</a>
+                <a href="volunteering.html">Volunteering</a>
+                <a href="reviews.html">Reviews</a>
+            </nav>
+            
+            <div class="auth-buttons" id="auth-container">
+                <!-- Buttons or Avatar will be injected here by JS -->
+            </div>
+        </div>
+    </header>
+
+    <main id="home">
+        <!-- HERO SECTION -->
+        <section class="hero">
+            <div class="container hero-content">
+                <div class="hero-text">
+                    <h1>Your Path to University Starts Here</h1>
+                    <p>Guidance, Opportunities & Community for Future Students</p>
+                    <a href="universities.html" class="btn btn-signup" style="padding: 1rem 2rem;">Get Started</a>
+                </div>
+                <div class="hero-graphic">
+                    <img src="brain.png" alt="AI Brain Network">
+                </div>
+            </div>
+        </section>
+
+        <!-- FEATURES GRID (Карточки с прямыми ссылками на файлы) -->
+        <section class="features">
+            <div class="container features-grid">
+                <a href="universities.html" class="feature-card card-universities">
+                    <div class="text"><h3>Universities</h3><p>Colleges</p></div>
+                    <div class="icon"><i class="fa-solid fa-building-columns"></i></div>
+                </a>
+                
+                <a href="olympiads.html" class="feature-card card-olympiads">
+                    <div class="icon"><i class="fa-solid fa-medal"></i></div>
+                    <div class="text"><h3>Olympiads</h3></div>
+                </a>
+                
+                <a href="volunteering.html" class="feature-card card-volunteering">
+                    <div class="icon"><i class="fa-solid fa-hands-holding-circle"></i></div>
+                    <div class="text"><h3>Volunteering</h3></div>
+                </a>
+                
+                <a href="recommendations.html" class="feature-card card-recommendations">
+                    <div class="text"><h3>Personalized Recommendations</h3><p>AI Powered</p></div>
+                    <div class="icon"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+                </a>
+                
+                <a href="calendar.html" class="feature-card card-calendar">
+                    <div class="text"><h3>Event Calendar</h3></div>
+                    <div class="icon"><i class="fa-regular fa-calendar-star"></i></div>
+                </a>
+                
+                <a href="reviews.html" class="feature-card card-reviews">
+                    <div class="icon"><i class="fa-regular fa-comment-dots"></i></div>
+                    <div class="text"><h3>Online School Reviews</h3></div>
+                </a>
+            </div>
+        </section>
+
+        <!-- CTA -->
+        <section class="cta">
+            <div class="container">
+                <h2>Ready to Begin Your Journey?</h2>
+                <a href="universities.html" class="btn btn-explore">Explore Features</a>
+            </div>
+        </section>
+    </main>
+
+    <!-- REGISTRATION MODAL -->
+    <div class="modal-overlay" id="register-modal">
+        <div class="modal-content">
+            <span class="close-modal" id="close-modal-btn">&times;</span>
+            <div class="modal-header">
+                <h2>Create Account</h2>
+                <p>Join TrackMyUni to track your admission progress</p>
+            </div>
+            <form id="register-form">
+                <div class="form-group">
+                    <label for="reg-name">Account Name</label>
+                    <input type="text" id="reg-name" placeholder="e.g., Ivan Ivanov" required>
+                </div>
+                <div class="form-group">
+                    <label for="reg-username">Username</label>
+                    <input type="text" id="reg-username" placeholder="@ivan_iv" pattern="^@[a-zA-Z0-9_]+$" title="Must start with @ and contain only letters, numbers, or underscores">
+                    <span class="input-hint">Optional: English username starting with @</span>
+                </div>
+                <div class="form-group">
+                    <label for="reg-email">Email Address</label>
+                    <input type="email" id="reg-email" placeholder="example@mail.ru" required>
+                </div>
+                <div class="form-group">
+                    <label for="reg-phone">Phone Number</label>
+                    <input type="tel" id="reg-phone" placeholder="+7 (999) 000-00-00" required>
+                </div>
+                <button type="submit" class="submit-btn">Sign Up</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // --- AUTH LOGIC ---
+        const authContainer = document.getElementById('auth-container');
+        const modal = document.getElementById('register-modal');
+        const closeBtn = document.getElementById('close-modal-btn');
+        const form = document.getElementById('register-form');
+
+        function renderAuthState() {
+            const user = localStorage.getItem('tmu_user');
+            
+            if (user) {
+                // User is logged in: Show Avatar
+                const userData = JSON.parse(user);
+                const initial = userData.name ? userData.name.charAt(0).toUpperCase() : 'U';
+                
+                authContainer.innerHTML = `
+                    <div class="user-avatar" title="${userData.name} (${userData.username || 'No username'})" onclick="logout()">
+                        ${initial}
+                    </div>
+                `;
+                // Make avatar visible via flex
+                authContainer.querySelector('.user-avatar').style.display = 'flex';
+            } else {
+                // User is NOT logged in: Show Buttons
+                authContainer.innerHTML = `
+                    <a href="#" class="btn btn-login">Log In</a>
+                    <button class="btn btn-signup" id="open-register-btn">Sign Up</button>
+                `;
+                
+                // Attach event listener to the newly created Sign Up button
+                document.getElementById('open-register-btn').addEventListener('click', (e) => {
+                    e.preventDefault();
+                    openModal();
+                });
+            }
+        }
+
+        function openModal() {
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        function logout() {
+            if(confirm('Do you want to log out?')) {
+                localStorage.removeItem('tmu_user');
+                renderAuthState();
+            }
+        }
+
+        // Modal Events
+        closeBtn.addEventListener('click', closeModal);
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) closeModal();
+        });
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && modal.classList.contains('active')) closeModal();
+        });
+
+        // Form Submission
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const name = document.getElementById('reg-name').value;
+            const username = document.getElementById('reg-username').value;
+            const email = document.getElementById('reg-email').value;
+            const phone = document.getElementById('reg-phone').value;
+
+            if(name && email && phone) {
+                // Save to LocalStorage
+                const userData = { name, username, email, phone };
+                localStorage.setItem('tmu_user', JSON.stringify(userData));
+                
+                closeModal();
+                form.reset();
+                renderAuthState(); // Re-render header to show avatar
+            }
+        });
+
+        // Initialize Auth State on Load
+        renderAuthState();
+    </script>
+</body>
+</html>
